@@ -41,6 +41,15 @@ class SummaryTools():
     def project_summary(df):
         return df.groupby(df['Project Codes']).sum()
 
+    def dollar_formatter(x):
+        return '${:,.0f}'.format(x)
+
+    def make_formatters():
+        return {
+            'Expenses': SummaryTools.dollar_formatter,
+            'Income': SummaryTools.dollar_formatter,
+        }
+
     def make_groups_filter_fn(df, groups):
         def fn(i):
             g = groups[df.loc[i, 'Project Codes']]
@@ -79,18 +88,12 @@ class SummaryTools():
         else:
             raise ValueError(field)
 
-        fig = plt.figure(figsize=(10, 6))
-        # plt.title(
-        #     '%s by source for FY %i-%i' %
-        #     (field.capitalize(), start_year, start_year + 1 - 2000),
-        #     fontsize=16
-        # )
-        my_circle=plt.Circle((0,0), 0.5, color='white')
-
+        fig = plt.figure(figsize=(10, 6), constrained_layout=False)
+        ax = fig.add_axes([0,0,1,1])
+        plt.subplots_adjust(0,0,1,1)
         colours = cmap.hex_colors
-
-        _, texts = plt.pie(
-            df.values,
+        img, texts = plt.pie(
+            df.values[:, 0],
             labels=labels,
             center=(0, 0),
             colors=colours,
@@ -100,3 +103,6 @@ class SummaryTools():
 
         # if field == 'Expenses':
         #     plt.arrow(1.08, 0.03, -0.04, 0.0, head_width=0.025, head_length=0.02)
+
+        p=plt.gcf()
+        p.gca().add_artist(plt.Circle((0,0), 0.6, color='white'))
