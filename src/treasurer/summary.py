@@ -41,9 +41,9 @@ class SummaryTools():
         SummaryTools.calculated_balance(summary)
         summary['Balance'] = SummaryTools.calculated_balance(summary)
 
-        post_bali_filter = summary.index > SummaryTools.LAST_FY_OF_THE_BALI_ACC
+        post_bali_filter = summary.index >= SummaryTools.LAST_FY_OF_THE_BALI_ACC
         summary.loc[post_bali_filter, 'Balance'] = by_year.apply(
-            lambda ser: ser.iloc[-1,]
+            lambda ser: ser[ser['Account'] == 'Bangalow'].iloc[-1,]
         ).loc[post_bali_filter, 'Balance']
         return summary
 
