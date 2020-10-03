@@ -98,14 +98,14 @@ class SummaryTools():
         return summaries
 
 
-    def pie_chart(df, field, img_dir, arrows):
+    def pie_chart(df, field, img_dir, arrows, font_sizes, wrap_widths):
         fig_size = 4
         v_margin = -0.1
-        h_margin = 1.8
+        h_margin = 2.6
 
         labels = [
             # '%.1f%% - ' % (df.loc[a, field] / df.sum() * 100) + re.sub(r'-', ' ', a))
-            textwrap.fill(re.sub(r'-', ' ', a), width=25)
+            textwrap.fill(re.sub(r'-', ' ', a), width=wrap_widths[field])
             for a in df.index
         ]
 
@@ -134,7 +134,7 @@ class SummaryTools():
             colors=colours,
             wedgeprops={'linewidth': 0.8, 'edgecolor': 'black'}
         )
-        [t.set_fontsize(12) for t in texts]
+        [t.set_fontsize(font_sizes[field]) for t in texts]
 
         plt.gcf().gca().add_artist(plt.Circle(
             (0,0), 0.8, facecolor='lightgrey', edgecolor='black',
